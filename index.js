@@ -112,6 +112,8 @@ client.on("message",msg => {
 							} else{
 								msg.channel.send(":no_entry_sign: Error: Nice try");
 							}
+						} else{
+							command.execute(client,msg,args);
 						}
 					}
 				}
