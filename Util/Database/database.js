@@ -53,7 +53,7 @@ module.exports = {
 					nbc: 0
 				}
 				dbjson["id-" + user.id] = dbentry;
-				fs.writeFile("./Util/Database/database.json",dbjson,console.log);
+				fs.writeFile("./Util/Database/database.json",JSON.stringify(dbjson),console.log);
 				let usere = new User(dbentry);
 				resolve(usere);
 			}
