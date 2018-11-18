@@ -33,6 +33,10 @@ client.on("message",msg => {
 							value: ""
 						},
 						{
+							name: "Fun commands",
+							value: ""
+						},
+						{
 							name: "Currency commands",
 							value: ""
 						},
@@ -59,10 +63,12 @@ client.on("message",msg => {
 					let commandformatted = "**" + prefix + command.name + " " + argsformatted + "** | " + command.description + "\n";
 					if(command.category == "Basic"){
 						embed.fields[0].value += commandformatted;
-					} else if(command.category == "Currency"){
+					} else if(command.category == "Fun"){
 						embed.fields[1].value += commandformatted;
-					} else if(command.category == "Admin"){
+					} else if(command.category == "Currency"){
 						embed.fields[2].value += commandformatted;
+					} else if(command.category == "Admin"){
+						embed.fields[3].value += commandformatted;
 					}
 				}
 
