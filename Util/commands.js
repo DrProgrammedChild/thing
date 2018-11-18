@@ -373,7 +373,7 @@ module.exports = {
 			category: "Basic",
 			description: "Version of the bot (and some legal stuff)",
 			execute: function(client,msg,args){
-				msg.channel.send("Version v1.0.0 (Testing edition)\nMade by _MFSec in assosiation with the Toxic cult\nCopyright 2018");
+				msg.channel.send("Version v1.0.0 (Full release)\nMade by _MFSec in assosiation with the Toxic cult\nCopyright 2018");
 			},
 			args: false,
 			rolesallowed: false
