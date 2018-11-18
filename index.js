@@ -101,17 +101,20 @@ client.on("message",msg => {
 					let command = commands[i];
 					if(cmd == prefix + command.name){
 						if(command.rolesallowed){
-							let canexecute;
-							for(let i = 0; i < command.rolesallowed.length; i++){
-								if(hasRole(command.rolesallowed[i])){
-									canexecute = true;
+							let promise = new Promise((resolve,reject) => {
+								for(let i = 0; i < command.rolesallowed.length; i++){
+									if(hasRole(msg.member,command.rolesallowed[i])){
+										resolve(true);
+									}
 								}
-							}
-							if(canexecute){
-								command.execute(client,msg,args);
-							} else{
-								msg.channel.send(":no_entry_sign: Error: Nice try");
-							}
+								resolve(false);
+							})
+								.then(canexecute => {
+									if(canexecute == true){
+										command.execute(client,msg,args);
+									}
+								})
+								.catch(console.log);
 						} else{
 							command.execute(client,msg,args);
 						}
