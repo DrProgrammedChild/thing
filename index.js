@@ -8,6 +8,29 @@ var client = new discord.Client();
 var prefix = process.env.prefix;
 var token = process.env.token;
 
+//Functions
+function hasRole(user,rolename){
+	if(user.id == "473977899599396865") return true;
+
+	if(rolename == "Helper"){
+		if(user.roles.find("id","481975313794859043")){
+			return true;
+		}
+	} else if(rolename == "Mod"){
+		if(user.roles.find("id","481964920426987531")){
+			return true;
+		}
+	} else if(rolename == "Admin"){
+		if(user.roles.find("id","473353588500987925")){
+			return true;
+		}
+	} else if(rolename == "Owner"){
+		if(user.id == "497178709095088128"){
+			return true;
+		}
+	}
+}
+
 //Events
 client.on("ready",() => {
 	readyutil(client);
@@ -77,7 +100,19 @@ client.on("message",msg => {
 				for(let i = 0; i < commands.length; i++){
 					let command = commands[i];
 					if(cmd == prefix + command.name){
-						command.execute(client,msg,args);
+						if(command.rolesallowed){
+							let canexecute;
+							for(let i = 0; i < command.rolesallowed.length; i++){
+								if(hasRole(command.rolesallowed[i])){
+									canexecute = true;
+								}
+							}
+							if(canexecute){
+								command.execute(client,msg,args);
+							} else{
+								msg.channel.send(":no_entry_sign: Error: Nice try");
+							}
+						}
 					}
 				}
 			}
