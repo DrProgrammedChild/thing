@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/DrProgrammedChild/thing#readme",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "discord.js": "^11.4.2",
     "express": "^4.16.4",
     "ffmpeg-binaries": "^4.0.0",
