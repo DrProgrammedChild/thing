@@ -2,6 +2,7 @@ var database = require("./Database/database.js");
 var shoputil = require("./shop.js");
 var musicutil = require("./music.js");
 var request = require("request");
+var battlespending = [];
 
 function random(min,max) {
 	return Math.floor(Math.random()*(max-min+1))+min;
@@ -82,13 +83,24 @@ module.exports = {
 			category: "Currency",
 			description: "Displays how many toxic coins you (or someone else) has",
 			execute: function(client,msg,args){
-				database.getUser(msg.member)
-					.then(user => {
-						msg.channel.send("You have **" + user.tc + "** toxic coins.");
-					})
-					.catch(console.log);
+				if(!args[0]){
+					database.getUser(msg.member)
+						.then(user => {
+							msg.channel.send("You have **" + user.tc + "** toxic coins.");
+						})
+						.catch(console.log);
+				} else{
+					let member = msg.mentions.members.first();
+					database.getUser(member)
+						.then(user => {
+							msg.channel.send(member.user.username + " has **" + user.tc + "** toxic coins.");
+						})
+						.catch(console.log);
+				}
 			},
-			args: false,
+			args: [
+				{name: "user", required: false}
+			],
 			rolesallowed: false
 		},
 		{
@@ -373,7 +385,128 @@ module.exports = {
 			category: "Basic",
 			description: "Version of the bot (and some legal stuff)",
 			execute: function(client,msg,args){
-				msg.channel.send("Version v1.0.0 (Full release)\nMade by _MFSec in assosiation with the Toxic cult\nCopyright 2018");
+				msg.channel.send("Version v1.0.1 (Testing edition)\nMade by _MFSec in assosiation with the Toxic cult\nCopyright 2018");
+			},
+			args: false,
+			rolesallowed: false
+		},
+		{
+			name: "website",
+			category: "Basic",
+			description: "Visit our lovely website",
+			execute: function(client,msg,args){
+				msg.channel.send("Go to our website:\nhttp://localhost:8081/");
+			},
+			args: false,
+			rolesallowed: false
+		},
+		{
+			name: "contact",
+			category: "Basic",
+			description: "Report bugs in our software",
+			execute: function(client,msg,args){
+				msg.member.guild.channels.find("id","483011557933187072").send({
+					embed: {
+						title: "Bug report",
+						description: "**User:** <@" + msg.member.id + ">\n**Report:** " + args.join(" ")
+					}
+				});
+			},
+			args: [
+				{name: "report", required: true}
+			],
+			rolesallowed: false
+		},
+		{
+			name: "duel",
+			category: "Fun",
+			description: "Request to duel someone.",
+			execute: function(client,msg,args){
+				let member = msg.mentions.members.first();
+				database.getUser(msg.member)
+					.then(user => {
+						if(user.tc >= parseInt(args[1])){
+							database.getUser(member)
+								.then(user2 => {
+									if(user2.tc >= parseInt(args[1])){
+										battlespending.push({
+											user1: msg.member,
+											user2: member,
+											bet: parseInt(args[1])
+										});
+										msg.channel.send("**" + member.user.username + "**, **" + msg.member.user.username + "** has challenged you to a duel and bets **" + parseInt(args[1]) + "** . To accept, do -accept. To decline, do -decline.");
+										setTimeout(() => {
+											let duel = battlespending.findIndex(elem => {if(elem){return elem.user2 == member}});
+											if(battlespending[duel]){
+												delete battlespending[duel];
+												msg.channel.send("**" + member.user.username + "** took too long to respond :(");
+											}
+										},1000*15);
+									} else{
+										msg.channel.send(":no_entry_sign: Error: Insufficient funds");
+									}
+								})
+								.catch(console.log);
+						} else{
+							msg.channel.send(":no_entry_sign: Error: Insufficient funds");
+						}
+					})
+					.catch(console.log);
+			},
+			args: [
+				{name: "user", required: true},
+				{name: "amount", required: true}
+			],
+			rolesallowed: false
+		},
+		{
+			name: "accept",
+			category: "Fun",
+			description: "Accept a duel",
+			execute: function(client,msg,args){
+				let duelIndex = battlespending.findIndex(elem => {return elem.user2 == msg.member});
+				if(battlespending[duelIndex]){
+					msg.channel.send("Battle commensing...");
+					let duel = battlespending[duelIndex];
+					delete battlespending[duelIndex];
+					let winner = random(1,2);
+					let winneruser = duel["user" + winner];
+					let loser;
+					database.getUser(winneruser)
+						.then(user => {
+							user.giveTc(duel.bet);
+							if(winner == 1){
+								loser = duel.user2;
+							} else{
+								loser = duel.user1;
+							}
+							database.getUser(loser)
+								.then(user2 => {
+									user2.takeTc(duel.bet);
+									msg.channel.send("**" + winneruser.user.username + "** has won! They have recieved **" + duel.bet + "** toxic coins while **" + loser.user.username + "** has lost **" + duel.bet + "** toxic coins.");
+								})
+								.catch(console.log);
+						})
+						.catch(console.log);
+				} else{
+					msg.channel.send(":no_entry_sign: Error: No one requested a duel");
+				}
+			},
+			args: false,
+			rolesallowed: false
+		},
+		{
+			name: "decline",
+			category: "Fun",
+			description: "Decline a duel",
+			execute: function(client,msg,args){
+				let duelIndex = battlespending.findIndex(elem => {return elem.user2 == msg.member});
+				if(battlespending[duelIndex]){
+					delete battlespending[duelIndex];
+					msg.channel.send("Declined battle");
+				} else{
+					msg.channel.send(":no_entry_sign: Error: No one requested a duel");
+				}
 			},
 			args: false,
 			rolesallowed: false
