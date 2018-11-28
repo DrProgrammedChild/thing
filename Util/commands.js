@@ -385,7 +385,7 @@ module.exports = {
 			category: "Basic",
 			description: "Version of the bot (and some legal stuff)",
 			execute: function(client,msg,args){
-				msg.channel.send("Version v1.0.1 (Testing edition)\nMade by _MFSec in assosiation with the Toxic cult\nCopyright 2018");
+				msg.channel.send("Version v1.0.1 (Full release)\nMade by _MFSec in assosiation with the Toxic cult\nCopyright 2018");
 			},
 			args: false,
 			rolesallowed: false
@@ -395,7 +395,7 @@ module.exports = {
 			category: "Basic",
 			description: "Visit our lovely website",
 			execute: function(client,msg,args){
-				msg.channel.send("Go to our website:\nhttp://localhost:8081/");
+				msg.channel.send("Go to our website:\nhttps://toxic-bot.heroku.com/");
 			},
 			args: false,
 			rolesallowed: false
