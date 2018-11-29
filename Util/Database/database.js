@@ -1,5 +1,5 @@
-var dbjson = require("./database.json");
-var fs = require("fs");
+var fs = require("drop-fs")({apiKey: process.env.dbkey});
+var dbjson = fs.readFileSync("./database.json");
 
 class User{
 	constructor(options){
@@ -20,7 +20,7 @@ class User{
 			tfc: this.tfc,
 			nbc: this.nbc
 		};
-		fs.writeFile("./Util/Database/database.json",JSON.stringify(dbjson),console.log);
+		fs.writeFile("./database.json",JSON.stringify(dbjson),console.log);
 	}
 	takeTc(amount){
 		this.tc -= amount;
@@ -32,7 +32,7 @@ class User{
 			tfc: this.tfc,
 			nbc: this.nbc
 		};
-		fs.writeFile("./Util/Database/database.json",JSON.stringify(dbjson),console.log);
+		fs.writeFile("./database.json",JSON.stringify(dbjson),console.log);
 	}
 }
 
@@ -53,7 +53,7 @@ module.exports = {
 					nbc: 0
 				}
 				dbjson["id-" + user.id] = dbentry;
-				fs.writeFile("./Util/Database/database.json",JSON.stringify(dbjson),console.log);
+				fs.writeFile("./database.json",JSON.stringify(dbjson),console.log);
 				let usere = new User(dbentry);
 				resolve(usere);
 			}
