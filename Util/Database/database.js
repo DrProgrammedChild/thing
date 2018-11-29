@@ -1,5 +1,8 @@
-var fs = require("drop-fs")({apiKey: process.env.dbkey});
-var dbjson = fs.readFileSync("./database.json");
+var fs = require("dropbox-fs")({apiKey: process.env.dbkey});
+var dbjson;
+fs.readFile("/database.json","utf8",(err,res) => {
+	dbjson = JSON.parse(res);
+});
 
 class User{
 	constructor(options){
@@ -20,7 +23,7 @@ class User{
 			tfc: this.tfc,
 			nbc: this.nbc
 		};
-		fs.writeFile("./database.json",JSON.stringify(dbjson),console.log);
+		fs.writeFile("/database.json",JSON.stringify(dbjson),console.log);
 	}
 	takeTc(amount){
 		this.tc -= amount;
@@ -32,7 +35,7 @@ class User{
 			tfc: this.tfc,
 			nbc: this.nbc
 		};
-		fs.writeFile("./database.json",JSON.stringify(dbjson),console.log);
+		fs.writeFile("/database.json",JSON.stringify(dbjson),console.log);
 	}
 }
 
@@ -53,7 +56,7 @@ module.exports = {
 					nbc: 0
 				}
 				dbjson["id-" + user.id] = dbentry;
-				fs.writeFile("./database.json",JSON.stringify(dbjson),console.log);
+				fs.writeFile("/database.json",JSON.stringify(dbjson),console.log);
 				let usere = new User(dbentry);
 				resolve(usere);
 			}
