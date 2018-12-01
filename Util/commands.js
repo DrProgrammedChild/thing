@@ -395,7 +395,7 @@ module.exports = {
 			category: "Basic",
 			description: "Visit our lovely website",
 			execute: function(client,msg,args){
-				msg.channel.send("Go to our website:\nhttps://toxic-bot.heroku.com/");
+				msg.channel.send("Go to our website:\nhttps://toxic-bot.herokuapp.com/");
 			},
 			args: false,
 			rolesallowed: false
