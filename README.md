@@ -1,3 +1,6 @@
+# IMPORTANT NOTE
+this project is no longer maintained, and is based on an outdated version of the hackerbot framework (the framework the bot originally ran on). i was banned from that discord server, and this bot is dead.
+
 # toxic-bot
 just a bot i made for my friends discord server
 
